@@ -1,0 +1,133 @@
+:root {
+  --cor-primaria: #0072ff;
+  --cor-secundaria: #00c6ff;
+  --cor-escura: #1e293b;
+  --cor-clara: #f1f5f9;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: var(--cor-clara);
+}
+
+/* MENU SUPERIOR */
+header {
+  background: linear-gradient(90deg, var(--cor-primaria), var(--cor-secundaria));
+  padding: 15px 20px;
+  color: white;
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+nav ul {
+  display: flex;
+  list-style: none;
+  gap: 20px;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+}
+
+/* LAYOUT */
+.container {
+  display: flex;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 220px;
+  background: var(--cor-escura);
+  color: white;
+  min-height: 100vh;
+  padding: 20px 10px;
+}
+
+.sidebar a {
+  display: block;
+  padding: 8px;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  margin-bottom: 4px;
+}
+
+.sidebar a:hover {
+  background: var(--cor-primaria);
+}
+
+/* CONTEÚDO */
+.content {
+  flex: 1;
+  padding: 0px;
+}
+
+/* CARD */
+.card {
+  background: white;
+  padding: 5px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  max-width: 900px;
+}
+
+/* CAMPOS NA MESMA LINHA */
+.campo {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 2px;
+  gap: 15px; /* espaço entre label e input */
+}
+
+.campo label {
+  font-size: 13px;
+  width: 200px; /* largura fixa do label */
+  text-align: right;
+}
+
+.campo input {
+  padding: 4px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  width: 120px;
+  font-size: 13px;
+}
+
+/* BOTÃO */
+button {
+  margin-top: 12px;
+  padding: 5px 12px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(90deg, var(--cor-primaria), var(--cor-secundaria));
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.resultado, .explicacao {
+  margin-top: 10px;
+  font-size: 15px;
+  line-height: 1.1;
+  max-height: calc(100vh - 150px); /* limita à altura da tela */
+  
+}
+
+.calculo {
+  margin-top: 10px;
+  font-family: monospace;
+  font-size: 12px;
+}
+

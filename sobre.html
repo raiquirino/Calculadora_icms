@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sobre</title>
+
+<style>
+/* reutiliza o mesmo CSS */
+body { margin:0; font-family:Arial; }
+header { background:#0072ff; padding:15px; color:white; }
+nav { display:flex; justify-content:space-between; }
+nav ul { display:flex; list-style:none; gap:15px; }
+nav a { color:white; text-decoration:none; }
+
+.container { display:flex; }
+.sidebar { width:200px; background:#1e293b; color:white; padding:15px; }
+.content { flex:1; padding:20px; }
+
+section { background:white; padding:20px; border-radius:8px; }
+</style>
+</head>
+
+<body>
+
+<header>
+    <nav>
+        <h1>Calculadora de Impostos</h1>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="sobre.html">Sobre</a></li>
+            <li><a href="servicos.html">Serviços</a></li>
+            <li><a href="contato.html">Contato</a></li>
+        </ul>
+    </nav>
+</header>
+
+<div class="container">
+    <aside class="sidebar">
+        <p>Links rápidos</p>
+    </aside>
+
+    <main class="content">
+        <section>
+            <h2>Sobre</h2>
+            <p>Esta página explica o objetivo da calculadora de impostos.</p>
+        </section>
+    </main>
+</div>
+
+</body>
+</html>

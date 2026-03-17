@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculadora ICMS ST</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>Calculadora ICMS ST</h1>
+
+<form id="icmsForm" onsubmit="return false;">
+  <label>Emissão
+    <input type="date" id="emissao" />
+  </label>
+
+  <label>Valor do Produto
+    <input type="number" id="valorProduto" step="0.01" />
+  </label>
+
+  <label>Frete
+    <input type="number" id="frete" step="0.01" />
+  </label>
+
+  <label>IPI
+    <input type="number" id="ipi" step="0.01" />
+  </label>
+
+  <label>Outras Despesas
+    <input type="number" id="outrasDespesas" step="0.01" />
+  </label>
+
+  <label>Descontos
+    <input type="number" id="descontos" step="0.01" />
+  </label>
+
+  <label>MVA (%)
+    <input type="number" id="mva" step="0.01" />
+  </label>
+
+  <label>Redução da Base de Cálculo (%)
+    <input type="number" id="reducaoBase" step="0.01" />
+  </label>
+
+  <label>Alíquota Interna (%)
+    <input type="number" id="aliquotaInterna" step="0.01" />
+  </label>
+
+  <label>Alíquota Interestadual (%)
+    <input type="number" id="aliquotaInterestadual" step="0.01" />
+  </label>
+
+  <label>Redução ICMS Origem (%)
+    <input type="number" id="reducaoOrigem" step="0.01" />
+  </label>
+
+  <button type="button" onclick="calcular()">Calcular</button>
+</form>
+
+<div class="explicacao" id="explicacao"></div>
+
+<script>
+function calcular() {
+  const valorProduto = parseFloat(document.getElementById('valorProduto').value) || 0;
+  const frete = parseFloat(document.getElementById('frete').value) || 0;
+  const ipi = parseFloat(document.getElementById('ipi').value) || 0;
+  const outrasDespesas = parseFloat(document.getElementById('outrasDespesas').value) || 0;
+  const descontos = parseFloat(document.getElementById('descontos').value) || 0;
+  const mva = parseFloat(document.getElementById('mva').value) || 0;
+  const reducaoBase = parseFloat(document.getElementById('reducaoBase').value) || 0;
+  const aliquotaInterna = parseFloat(document.getElementById('aliquotaInterna').value) || 0;
+  const aliquotaInterestadual = parseFloat(document.getElementById('aliquotaInterestadual').value) || 0;
+  const reducaoOrigem = parseFloat(document.getElementById('reducaoOrigem').value) || 0;
+
+  const emissaoInput = document.getElementById('emissao').value;
+  let vencimentoStr = 'Não informado';
+  if (emissaoInput) {
+    const emissao = new Date(emissaoInput);
+    const vencimento = new Date(emissao);
+    vencimento.setDate(vencimento.getDate() + 20);
+    vencimentoStr = vencimento.toLocaleDateString('pt-BR');
+  }
+
+  const valorOperacao = valorProduto + frete + ipi + outrasDespesas - descontos;
+  const valorMVA = valorOperacao * (1 + mva / 100);
+  const baseCalculoAnt = valorMVA * (reducaoBase / 100);
+  const icmsAntecipadoInterno = baseCalculoAnt * (aliquotaInterna / 100);
+  const bcICMS = valorOperacao * ((100 - reducaoOrigem) / 100);
+  const icmsOrigem = bcICMS * (aliquotaInterestadual / 100);
+  const icmsAntecipadoOrigem = icmsOrigem * (reducaoBase / 100);
+  const icmsAPagar = icmsAntecipadoInterno - icmsAntecipadoOrigem;
+
+  const explicacaoHTML = `
+    <h2>Explicação dos Cálculos</h2>
+    <p>Valor da Operação: R$ ${valorOperacao.toFixed(2)}</p>
+    <p>Valor do MVA: R$ ${valorMVA.toFixed(2)}</p>
+    <p>Base de Cálculo da Antecipação: R$ ${baseCalculoAnt.toFixed(2)}</p>
+    <p>ICMS Antecipado Interno: R$ ${icmsAntecipadoInterno.toFixed(2)}</p>
+    <p>Base de Cálculo do ICMS: R$ ${bcICMS.toFixed(2)}</p>
+    <p>ICMS Origem: R$ ${icmsOrigem.toFixed(2)}</p>
+    <p>ICMS Antecipado Origem: R$ ${icmsAntecipadoOrigem.toFixed(2)}</p>
+    <p><strong>ICMS a Pagar: R$ ${icmsAPagar.toFixed(2)}</strong></p>
+    <p>Vencimento: ${vencimentoStr}</p>
+  `;
+
+  document.getElementById('explicacao').innerHTML = explicacaoHTML;
+}
+</script>
+
+</body>
+</html>

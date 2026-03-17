@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora de Impostos - ICMS ST</title>
+
+<link rel="stylesheet" href="style.css"> <!-- CSS separado -->
+<link rel="stylesheet" href="style_calculadora.css"> <!-- CSS separado -->
+
+</head>
+<body>
+
+<header>
+    <nav>
+        <h1>Calculadora de Impostos</h1>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="sobre.html">Sobre</a></li>
+            <li><a href="servicos.html">Serviços</a></li>
+            <li><a href="contato.html">Contato</a></li>
+        </ul>
+    </nav>
+</header>
+
+<div class="container">
+
+    <aside class="sidebar">
+        <ul>
+            <li><a href="icms_difal.html">ICMS DIFAL</a></li>
+            <li><a href="icms_antecipado.html">ICMS Antecipado</a></li>
+            <li><a href="#">Imposto 3</a></li>
+            <li><a href="#">Imposto 4</a></li>
+            <li><a href="#">Imposto 5</a></li>
+        </ul>
+    </aside>
+
+  <!-- CONTEÚDO -->
+  <main class="content">
+
+    <div class="card">
+      <h2>Calculadora ICMS DIFAL</h2>
+
+      <div class="campo">
+        <label>Valor do produto (R$):</label>
+        <input type="number" id="valorProduto" step="0.01">
+      </div>
+
+      <div class="campo">
+        <label>Desconto (R$):</label>
+        <input type="number" id="desconto" step="0.01">
+      </div>
+
+      <div class="campo">
+        <label>IPI (R$):</label>
+        <input type="number" id="ipi" step="0.01">
+      </div>
+
+      <div class="campo">
+        <label>Frete (R$):</label>
+        <input type="number" id="frete" step="0.01">
+      </div>
+
+      <div class="campo">
+        <label>Outras despesas (R$):</label>
+        <input type="number" id="outrasDespesas" step="0.01">
+      </div>
+
+      <div class="campo">
+        <label>ICMS destacado na NF (R$):</label>
+        <input type="number" id="icmsDestacado" step="0.01">
+      </div>
+
+      <div class="campo">
+        <label>Alíquota interestadual (%):</label>
+        <input type="number" id="aliquotaOrigem" step="0.01" value="7">
+      </div>
+
+      <div class="campo">
+        <label>Alíquota interna DF (%):</label>
+        <input type="number" id="aliquotaInterna" step="0.01" value="20">
+      </div>
+
+      <div class="campo">
+        <label>Alíquota FCP (%):</label>
+        <input type="number" id="aliquotaFCP" step="0.01">
+      </div>
+
+      <button onclick="calcularDIFAL()">Calcular</button>
+
+      <div class="resultado" id="resultado"></div>
+      <div class="explicacao" id="explicacao"></div>
+    </div>
+
+  </main>
+
+</div>
+
+<script>
+/* SUA LÓGICA ORIGINAL (INALTERADA) */
+function calcularDIFAL() {
+  const valorProduto = parseFloat(document.getElementById("valorProduto").value) || 0;
+  const desconto = parseFloat(document.getElementById("desconto").value) || 0;
+  const ipi = parseFloat(document.getElementById("ipi").value) || 0;
+  const frete = parseFloat(document.getElementById("frete").value) || 0;
+  const outrasDespesas = parseFloat(document.getElementById("outrasDespesas").value) || 0;
+
+  const icmsDestacadoNF = parseFloat(document.getElementById("icmsDestacado").value) || 0;
+  const aliqOrigem = parseFloat(document.getElementById("aliquotaOrigem").value) / 100 || 0;
+  const aliqInterna = parseFloat(document.getElementById("aliquotaInterna").value) / 100 || 0;
+  const aliqFCP = parseFloat(document.getElementById("aliquotaFCP").value) / 100 || 0;
+
+  const valorOperacao = valorProduto - desconto + ipi + frete + outrasDespesas;
+  const baseDestino = (valorOperacao - icmsDestacadoNF) / (1 - aliqInterna);
+  const icmsDestino = baseDestino * aliqInterna;
+  const fcpDestino = baseDestino * aliqFCP;
+  const totalDestino = icmsDestino + fcpDestino;
+  const credito = valorOperacao * aliqOrigem;
+  const difal = totalDestino - credito;
+
+  const moeda = v => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+
+  // Resultado final
+  document.getElementById("resultado").innerHTML = `<strong>DIFAL a recolher: </strong>${moeda(difal)}`;
+
+  // Explicação detalhada passo a passo
+  document.getElementById("explicacao").innerHTML = `
+    <h3>Explicação dos cálculos</h3>
+    <div class="calculo">
+      Valor da operação:<br>
+      (${moeda(valorProduto)} - ${moeda(desconto)} + ${moeda(ipi)} + ${moeda(frete)} + ${moeda(outrasDespesas)}) = ${moeda(valorOperacao)}<br><br>
+
+      Base de cálculo do destino (por dentro):<br>
+      (${moeda(valorOperacao)} - ${moeda(icmsDestacadoNF)}) ÷ (1 - ${(aliqInterna*100).toFixed(2)}%) = ${moeda(baseDestino)}<br><br>
+
+      ICMS destino:<br>
+      ${moeda(baseDestino)} × ${(aliqInterna*100).toFixed(2)}% = ${moeda(icmsDestino)}<br>
+      ${aliqFCP > 0 ? `${moeda(baseDestino)} × ${(aliqFCP*100).toFixed(2)}% = ${moeda(fcpDestino)}<br>` : ""}
+
+      Crédito ICMS interestadual:<br>
+      ${moeda(valorOperacao)} × ${(aliqOrigem*100).toFixed(2)}% = ${moeda(credito)}<br><br>
+
+      DIFAL a recolher:<br>
+      ${moeda(totalDestino)} - ${moeda(credito)} = <strong>${moeda(difal)}</strong>
+    </div>
+  `;
+}
+</script>
+
+</body>
+</html>
